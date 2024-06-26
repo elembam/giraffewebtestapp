@@ -96,7 +96,7 @@ let main argv =
             webHostBuilder
                 .ConfigureServices(configureServices)
                 .Configure(configureApp)
-                .UseUrls("http://*:5001") |> ignore) // Adjusted to bind to all network interfaces
+                .UseUrls("http://*:5001") |> ignore)
         .Build()
         .Run()
     0
