@@ -5,7 +5,6 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Microsoft.AspNetCore.Http
-open Microsoft.Extensions.Logging
 
 type ColumnRecord = {
     Diameter: float
@@ -30,8 +29,8 @@ let queryData diameterValue lengthValue loadValue fireRatingValue =
         record.Load = loadValue && 
         record.FireRating = fireRatingValue)
 
-// Define the web app with error handling
-let webApp (logger: ILogger) =
+// Define the web app
+let webApp =
     choose [
         route "/" >=> htmlFile "wwwroot/index.html"
         route "/query" >=> fun (next: HttpFunc) (ctx: HttpContext) ->
@@ -40,8 +39,6 @@ let webApp (logger: ILogger) =
                 let lengthValue = ctx.Request.Query.["length"].ToString()
                 let loadValue = ctx.Request.Query.["load"].ToString()
                 let fireRatingValue = ctx.Request.Query.["fireRating"].ToString()
-
-                logger.LogInformation($"Received parameters: diameterValue={diameterValue}, lengthValue={lengthValue}, loadValue={loadValue}, fireRatingValue={fireRatingValue}")
 
                 let diameterParsed, diameterValueParsed = Double.TryParse(diameterValue)
                 let lengthParsed, lengthValueParsed = Double.TryParse(lengthValue)
@@ -52,13 +49,10 @@ let webApp (logger: ILogger) =
 
                     match result with
                     | Some res ->
-                        logger.LogInformation($"Query result: {res}")
                         return! json {| result = res |} next ctx
                     | None ->
-                        logger.LogInformation("No matching record found.")
                         return! json {| error = "No matching record found." |} next ctx
                 else
-                    logger.LogInformation("Invalid input.")
                     return! json {| error = "Invalid input. Please enter valid numbers for Diameter, Length, and Load." |} next ctx
             }
         route "/data" >=> fun (next: HttpFunc) (ctx: HttpContext) ->
@@ -67,20 +61,13 @@ let webApp (logger: ILogger) =
             }
     ]
 
-// Configure services
 let configureServices (services: IServiceCollection) =
     services.AddGiraffe() |> ignore
-    services.AddLogging(fun builder ->
-        builder.AddConsole() |> ignore
-        builder.AddDebug() |> ignore) |> ignore
 
-// Configure the HTTP request pipeline with error handling
 let configureApp (app: IApplicationBuilder) =
-    let logger = app.ApplicationServices.GetService<ILogger<obj>>()
     app.UseStaticFiles()
-       .UseGiraffe(webApp logger)
+       .UseGiraffe(webApp)
 
-// Configure and run the web host
 [<EntryPoint>]
 let main argv =
     Host.CreateDefaultBuilder(argv)
