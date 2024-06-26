@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Column Data Query</title>
+    <title>spannverbund</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,20 +14,14 @@
             align-items: center;
             height: 100vh;
             background-color: #f0f0f0;
-            flex-direction: column;
         }
-        .table-container, .calculator {
+        .calculator {
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 600px;
             box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-        .table-container h2 {
-            text-align: left;
-            margin-bottom: 10px;
         }
         .calculator h1 {
             text-align: center;
@@ -40,7 +34,7 @@
         .form-group label {
             margin-bottom: 5px;
         }
-        .calculator select {
+        .calculator select, .calculator input {
             width: calc(100% - 22px);
             padding: 10px;
             margin: 0;
@@ -59,140 +53,221 @@
             font-size: 18px;
             color: #333;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
+        .chart-container {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div id="table-container" class="table-container"></div>
-
     <div class="calculator">
-        <h1>Column Data Query</h1>
+        <h1>Geilinger Stütze CO2 Calculator</h1>
         <form id="calculator-form">
             <div class="form-group">
-                <label for="diameter">Select Column Diameter, mm</label>
-                <select id="diameter" name="diameter" required>
-                    <option value="101.9">101.9</option>
-                    <!-- Add more options as needed -->
+                <label for="mantelValue">Select Mantel Diameter, mm</label>
+                <select id="mantelValue" name="mantelValue" required>
+                    <option value="0.0">0.0</option>
+                    <option value="100.0">100.0</option>
+                    <option value="101.6">101.6</option>
+                    <option value="120.0">120.0</option>
+                    <option value="121.0">121.0</option>
+                    <option value="127.0">127.0</option>
+                    <option value="133.0">133.0</option>
+                    <option value="139.7">139.7</option>
+                    <option value="140.0">140.0</option>
+                    <option value="150.0">150.0</option>
+                    <option value="151.0">151.0</option>
+                    <option value="152.4">152.4</option>
+                    <option value="159.0">159.0</option>
+                    <option value="160.0">160.0</option>
+                    <option value="177.8">177.8</option>
+                    <option value="180.0">180.0</option>
+                    <option value="181.0">181.0</option>
+                    <option value="193.7">193.7</option>
+                    <option value="200.0">200.0</option>
+                    <option value="201.0">201.0</option>
+                    <option value="201.2">201.2</option>
+                    <option value="201.5">201.5</option>
+                    <option value="219.1">219.1</option>
+                    <option value="220.0">220.0</option>
+                    <option value="244.5">244.5</option>
+                    <option value="250.0">250.0</option>
+                    <option value="251.5">251.5</option>
+                    <option value="261.8">261.8</option>
+                    <option value="273.0">273.0</option>
+                    <option value="298.5">298.5</option>
+                    <option value="300.0">300.0</option>
+                    <option value="302.0">302.0</option>
+                    <option value="323.9">323.9</option>
+                    <option value="350.0">350.0</option>
+                    <option value="352.5">352.5</option>
+                    <option value="355.6">355.6</option>
+                    <option value="400.0">400.0</option>
+                    <option value="402.0">402.0</option>
+                    <option value="406.4">406.4</option>
+                    <option value="452.5">452.5</option>
+                    <option value="457.0">457.0</option>
+                    <option value="503.0">503.0</option>
+                    <option value="508.0">508.0</option>
+                    <option value="559.0">559.0</option>
+                    <option value="610.0">610.0</option>
+                    <option value="660.0">660.0</option>
+                    <option value="711.0">711.0</option>
+                    <option value="762.0">762.0</option>
+                    <option value="813.0">813.0</option>
+                    <option value="864.0">864.0</option>
+                    <option value="914.0">914.0</option>
+                    <option value="1016.0">1016.0</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="length">Select Column Length, mm</label>
-                <select id="length" name="length" required>
-                    <option value="959">959</option>
-                    <option value="1959">1959</option>
-                    <option value="2959">2959</option>
-                    <option value="3959">3959</option>
-                    <!-- Add more options as needed -->
+                <label for="kernValue">Select Kern Diameter, mm</label>
+                <select id="kernValue" name="kernValue" required>
+                    <option value="0.0">0.0</option>
+                    <option value="40.0">40.0</option>
+                    <option value="45.0">45.0</option>
+                    <option value="50.0">50.0</option>
+                    <option value="60.0">60.0</option>
+                    <option value="70.0">70.0</option>
+                    <option value="80.0">80.0</option>
+                    <option value="90.0">90.0</option>
+                    <option value="100.0">100.0</option>
+                    <option value="110.0">110.0</option>
+                    <option value="120.0">120.0</option>
+                    <option value="130.0">130.0</option>
+                    <option value="140.0">140.0</option>
+                    <option value="150.0">150.0</option>
+                    <option value="160.0">160.0</option>
+                    <option value="170.0">170.0</option>
+                    <option value="180.0">180.0</option>
+                    <option value="190.0">190.0</option>
+                    <option value="200.0">200.0</option>
+                    <option value="210.0">210.0</option>
+                    <option value="220.0">220.0</option>
+                    <option value="230.0">230.0</option>
+                    <option value="240.0">240.0</option>
+                    <option value="250.0">250.0</option>
+                    <option value="260.0">260.0</option>
+                    <option value="280.0">280.0</option>
+                    <option value="300.0">300.0</option>
+                    <option value="320.0">320.0</option>
+                    <option value="350.0">350.0</option>
+                    <option value="380.0">380.0</option>
+                    <option value="400.0">400.0</option>
+                    <option value="420.0">420.0</option>
+                    <option value="450.0">450.0</option>
+                    <option value="500.0">500.0</option>
+                    <option value="550.0">550.0</option>
+                    <option value="600.0">600.0</option>
                 </select>
             </div>
             
             <div class="form-group">
-                <label for="load">Select Load, N</label>
-                <select id="load" name="load" required>
-                    <option value="959">959</option>
-                    <option value="1959">1959</option>
-                    <option value="2959">2959</option>
-                    <option value="3959">3959</option>
-                    <!-- Add more options as needed -->
-                </select>
+                <label for="length">Enter the length, mm</label>
+                <input type="number" id="length" name="length" required>
             </div>
             
-            <div class="form-group">
-                <label for="fireRating">Select Fire Rating</label>
-                <select id="fireRating" name="fireRating" required>
-                    <option value="cold">cold</option>
-                    <option value="hot">hot</option>
-                </select>
-            </div>
-
-            <button type="submit">Query</button>
+            <button type="submit">Calculate</button>
             <button type="button" id="reset-button">Reset</button>
         </form>
         <div id="result" class="result"></div>
+        <div class="chart-container">
+            <canvas id="carbonChart"></canvas>
+        </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('/data')
-                .then(response => response.json())
-                .then(data => {
-                    const tableContainer = document.getElementById('table-container');
-                    const groupedData = data.reduce((acc, record) => {
-                        if (!acc[record.fireRating]) {
-                            acc[record.fireRating] = [];
-                        }
-                        acc[record.fireRating].push(record);
-                        return acc;
-                    }, {});
-
-                    for (const fireRating in groupedData) {
-                        const section = document.createElement('div');
-                        section.classList.add('table-section');
-
-                        const title = document.createElement('h2');
-                        title.innerText = `Fire Rating: ${fireRating}`;
-                        section.appendChild(title);
-
-                        const table = document.createElement('table');
-                        const thead = document.createElement('thead');
-                        const headerRow = document.createElement('tr');
-                        headerRow.innerHTML = `
-                            <th>Diameter (mm)</th>
-                            <th>Length (mm)</th>
-                            <th>Load (N)</th>
-                        `;
-                        thead.appendChild(headerRow);
-                        table.appendChild(thead);
-
-                        const tbody = document.createElement('tbody');
-                        groupedData[fireRating].forEach(record => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${record.diameter}</td>
-                                <td>${record.length}</td>
-                                <td>${record.load}</td>
-                            `;
-                            tbody.appendChild(row);
-                        });
-                        table.appendChild(tbody);
-
-                        section.appendChild(table);
-                        tableContainer.appendChild(section);
-                    }
-                })
-                .catch(error => console.error('Error fetching initial data:', error));
-        });
+        let carbonChart;
 
         document.getElementById('calculator-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            const diameter = document.getElementById('diameter').value;
+            const mantelValue = document.getElementById('mantelValue').value;
+            const kernValue = document.getElementById('kernValue').value;
             const length = document.getElementById('length').value;
-            const load = document.getElementById('load').value;
-            const fireRating = document.getElementById('fireRating').value;
 
-            fetch(`/query?diameter=${diameter}&length=${length}&load=${load}&fireRating=${fireRating}`)
+            fetch(`/query?mantel=${mantelValue}&kern=${kernValue}&length=${length}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.result) {
-                        document.getElementById('result').innerHTML = `Result: ${data.result}`;
-                    } else {
-                        document.getElementById('result').innerHTML = `Error: ${data.error}`;
+                    const roundedData = {
+                        volume: parseFloat(data.volume).toFixed(2),
+                        pipeWeight: parseFloat(data.pipeWeight).toFixed(2),
+                        coreWeight: parseFloat(data.coreWeight).toFixed(2),
+                        concreteWeight: parseFloat(data.concreteWeight).toFixed(2),
+                        steelWeight: parseFloat(data.steelWeight).toFixed(2),
+                        totalCarbonEmissionsNormal: parseFloat(data.totalCarbonEmissionsNormal).toFixed(2),
+                        totalCarbonEmissionsGreen: parseFloat(data.totalCarbonEmissionsGreen).toFixed(2)
+                    };
+
+                    document.getElementById('result').innerHTML = `
+                        Volume: ${roundedData.volume} m3 <br>
+                        Pipe Weight: ${roundedData.pipeWeight} kg <br>
+                        Core Weight: ${roundedData.coreWeight} kg <br>
+                        Concrete Weight: ${roundedData.concreteWeight} kg <br>
+                        Steel Weight total: ${roundedData.steelWeight} kg <br>
+                        Total Carbon Emissions Normal: ${roundedData.totalCarbonEmissionsNormal} kg/CO2 ekv.<br>
+                        Total Carbon Emissions Green: ${roundedData.totalCarbonEmissionsGreen} kg/CO2 ekv.
+                    `;
+
+                    const ctx = document.getElementById('carbonChart').getContext('2d');
+                    
+                    if (carbonChart) {
+                        carbonChart.destroy();
                     }
+
+                    carbonChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Normal', 'Green'],
+                            datasets: [{
+                                label: 'Carbon Emissions Normal',
+                                data: [roundedData.totalCarbonEmissionsNormal, 0],
+                                backgroundColor: 'rgba(0, 137, 219, 0.7)',
+                                borderColor: 'rgba(0, 0, 0, 0.7)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Carbon Emissions Green',
+                                data: [0, roundedData.totalCarbonEmissionsGreen],
+                                backgroundColor: 'rgba(0, 219, 14, 0.7)',
+                                borderColor: 'rgba(0, 0, 0, 0.7)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top'
+                                },
+                                datalabels: {
+                                    anchor: 'end',
+                                    align: 'top',
+                                    formatter: function(value, context) {
+                                        return value;
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'CO2 Emissions'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Column Type'
+                                    },
+                                    stacked: true
+                                }
+                            }
+                        },
+                        plugins: [ChartDataLabels]
+                    });
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -203,6 +278,9 @@
         document.getElementById('reset-button').addEventListener('click', function() {
             document.getElementById('calculator-form').reset();
             document.getElementById('result').innerHTML = '';
+            if (carbonChart) {
+                carbonChart.destroy();
+            }
         });
     </script>
 </body>
