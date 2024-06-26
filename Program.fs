@@ -299,9 +299,10 @@ let main argv =
     Host.CreateDefaultBuilder(argv)
         .ConfigureWebHostDefaults(fun webHostBuilder ->
             webHostBuilder
+                .UseUrls("http://0.0.0.0:8080")
                 .ConfigureServices(configureServices)
                 .Configure(configureApp)
-                .UseUrls("http://localhost:5000") |> ignore)
+                |> ignore)
         .Build()
         .Run()
     0
