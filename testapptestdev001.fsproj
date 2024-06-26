@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>testapptestdev001.App</AssemblyName>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest> <!-- For self-contained deployments -->
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel> <!-- InProcess hosting for better performance on Azure -->
   </PropertyGroup>
 
   <ItemGroup>
