@@ -226,7 +226,7 @@ type CalculationResult = {
 // Define the web app
 let webApp (logger: ILogger) =
     choose [
-        route "/" >=> htmlFile "wwwroot/index.html"
+        route "/" >=> htmlFile "/index.html"
         route "/query" >=> fun (next: HttpFunc) (ctx: HttpContext) ->
             task {
                 let mantelValue = ctx.Request.Query.["mantel"]
