@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Column Data Query</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            flex-direction: column;
+        }
+        .table-container, .calculator {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        .table-container h2 {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        .calculator h1 {
+            text-align: center;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin: 10px 0;
+        }
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        .calculator select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 0;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .calculator button {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div id="table-container" class="table-container"></div>
+
+    <div class="calculator">
+        <h1>Column Data Query</h1>
+        <form id="calculator-form">
+            <div class="form-group">
+                <label for="diameter">Select Column Diameter, mm</label>
+                <select id="diameter" name="diameter" required>
+                    <option value="101.9">101.9</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="length">Select Column Length, mm</label>
+                <select id="length" name="length" required>
+                    <option value="959">959</option>
+                    <option value="1959">1959</option>
+                    <option value="2959">2959</option>
+                    <option value="3959">3959</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="load">Select Load, N</label>
+                <select id="load" name="load" required>
+                    <option value="959">959</option>
+                    <option value="1959">1959</option>
+                    <option value="2959">2959</option>
+                    <option value="3959">3959</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="fireRating">Select Fire Rating</label>
+                <select id="fireRating" name="fireRating" required>
+                    <option value="cold">cold</option>
+                    <option value="hot">hot</option>
+                </select>
+            </div>
+
+            <button type="submit">Query</button>
+            <button type="button" id="reset-button">Reset</button>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    const tableContainer = document.getElementById('table-container');
+                    const groupedData = data.reduce((acc, record) => {
+                        if (!acc[record.fireRating]) {
+                            acc[record.fireRating] = [];
+                        }
+                        acc[record.fireRating].push(record);
+                        return acc;
+                    }, {});
+
+                    for (const fireRating in groupedData) {
+                        const section = document.createElement('div');
+                        section.classList.add('table-section');
+
+                        const title = document.createElement('h2');
+                        title.innerText = `Fire Rating: ${fireRating}`;
+                        section.appendChild(title);
+
+                        const table = document.createElement('table');
+                        const thead = document.createElement('thead');
+                        const headerRow = document.createElement('tr');
+                        headerRow.innerHTML = `
+                            <th>Diameter (mm)</th>
+                            <th>Length (mm)</th>
+                            <th>Load (N)</th>
+                        `;
+                        thead.appendChild(headerRow);
+                        table.appendChild(thead);
+
+                        const tbody = document.createElement('tbody');
+                        groupedData[fireRating].forEach(record => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${record.diameter}</td>
+                                <td>${record.length}</td>
+                                <td>${record.load}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                        table.appendChild(tbody);
+
+                        section.appendChild(table);
+                        tableContainer.appendChild(section);
+                    }
+                })
+                .catch(error => console.error('Error fetching initial data:', error));
+        });
+
+        document.getElementById('calculator-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const diameter = document.getElementById('diameter').value;
+            const length = document.getElementById('length').value;
+            const load = document.getElementById('load').value;
+            const fireRating = document.getElementById('fireRating').value;
+
+            fetch(`/query?diameter=${diameter}&length=${length}&load=${load}&fireRating=${fireRating}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result) {
+                        document.getElementById('result').innerHTML = `Result: ${data.result}`;
+                    } else {
+                        document.getElementById('result').innerHTML = `Error: ${data.error}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('result').innerText = 'An error occurred. Please try again.';
+                });
+        });
+
+        document.getElementById('reset-button').addEventListener('click', function() {
+            document.getElementById('calculator-form').reset();
+            document.getElementById('result').innerHTML = '';
+        });
+    </script>
+</body>
+</html>
