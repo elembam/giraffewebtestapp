@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <AssemblyName>testapptestdev001.App</AssemblyName>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest> <!-- For self-contained deployments -->
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel> <!-- InProcess hosting for better performance on Azure -->
@@ -11,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Giraffe" Version="6.0.0" />
     <PackageReference Include="Giraffe.ViewEngine" Version="1.3.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>

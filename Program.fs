@@ -26,7 +26,11 @@ let initialColumnData = [
 let queryData diameterValue lengthValue loadValue fireRatingValue =
     let columnRecord = 
         initialColumnData
-        |> List.tryFind (fun record -> record.Diameter = diameterValue && record.Length = lengthValue && record.Load = loadValue && record.FireRating = fireRatingValue)
+        |> List.tryFind (fun record -> 
+            record.Diameter = diameterValue && 
+            record.Length = lengthValue && 
+            record.Load = loadValue && 
+            record.FireRating = fireRatingValue)
 
     match columnRecord with
     | Some cRecord -> 
@@ -34,7 +38,7 @@ let queryData diameterValue lengthValue loadValue fireRatingValue =
         Some result
     | None -> None
 
-// Define the web app
+// Define the web app with error handling
 let webApp (logger: ILogger) =
     choose [
         route "/" >=> htmlFile "wwwroot/index.html"
@@ -44,6 +48,7 @@ let webApp (logger: ILogger) =
                 let lengthValue = ctx.Request.Query.["length"]
                 let loadValue = ctx.Request.Query.["load"]
                 let fireRatingValue = ctx.Request.Query.["fireRating"]
+
                 logger.LogInformation($"Received parameters: diameterValue={diameterValue}, lengthValue={lengthValue}, loadValue={loadValue}, fireRatingValue={fireRatingValue}")
 
                 let diameterParsed, diameterValueParsed = Double.TryParse(diameterValue)
@@ -77,7 +82,7 @@ let configureServices (services: IServiceCollection) =
         builder.AddConsole() |> ignore
         builder.AddDebug() |> ignore) |> ignore
 
-// Configure the HTTP request pipeline
+// Configure the HTTP request pipeline with error handling
 let configureApp (app: IApplicationBuilder) =
     let logger = app.ApplicationServices.GetService<ILogger<obj>>()
     app.UseStaticFiles()
@@ -91,7 +96,7 @@ let main argv =
             webHostBuilder
                 .ConfigureServices(configureServices)
                 .Configure(configureApp)
-                .UseUrls("http://localhost:5001") |> ignore)
+                .UseUrls("http://*:5001") |> ignore) // Adjusted to bind to all network interfaces
         .Build()
         .Run()
     0
