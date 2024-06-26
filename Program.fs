@@ -6,7 +6,6 @@ open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Logging
-open Newtonsoft.Json
 
 type ColumnRecord = {
     Diameter: float
@@ -24,19 +23,12 @@ let initialColumnData = [
 
 // Function to query data based on user input
 let queryData diameterValue lengthValue loadValue fireRatingValue =
-    let columnRecord = 
-        initialColumnData
-        |> List.tryFind (fun record -> 
-            record.Diameter = diameterValue && 
-            record.Length = lengthValue && 
-            record.Load = loadValue && 
-            record.FireRating = fireRatingValue)
-
-    match columnRecord with
-    | Some cRecord -> 
-        let result = sprintf "Diameter: %f, Length: %f, Load: %f, Fire Rating: %s" cRecord.Diameter cRecord.Length cRecord.Load cRecord.FireRating
-        Some result
-    | None -> None
+    initialColumnData
+    |> List.tryFind (fun record -> 
+        record.Diameter = diameterValue && 
+        record.Length = lengthValue && 
+        record.Load = loadValue && 
+        record.FireRating = fireRatingValue)
 
 // Define the web app with error handling
 let webApp (logger: ILogger) =
@@ -44,10 +36,10 @@ let webApp (logger: ILogger) =
         route "/" >=> htmlFile "wwwroot/index.html"
         route "/query" >=> fun (next: HttpFunc) (ctx: HttpContext) ->
             task {
-                let diameterValue = ctx.Request.Query.["diameter"]
-                let lengthValue = ctx.Request.Query.["length"]
-                let loadValue = ctx.Request.Query.["load"]
-                let fireRatingValue = ctx.Request.Query.["fireRating"]
+                let diameterValue = ctx.Request.Query.["diameter"].ToString()
+                let lengthValue = ctx.Request.Query.["length"].ToString()
+                let loadValue = ctx.Request.Query.["load"].ToString()
+                let fireRatingValue = ctx.Request.Query.["fireRating"].ToString()
 
                 logger.LogInformation($"Received parameters: diameterValue={diameterValue}, lengthValue={lengthValue}, loadValue={loadValue}, fireRatingValue={fireRatingValue}")
 
@@ -96,7 +88,7 @@ let main argv =
             webHostBuilder
                 .ConfigureServices(configureServices)
                 .Configure(configureApp)
-                .UseUrls("http://*:5001") |> ignore)
+                |> ignore)
         .Build()
         .Run()
     0
